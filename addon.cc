@@ -1,53 +1,18 @@
-#include <node.h>
+#include <iostream>
+#include <nan.h>
+using namespace v8;
 
-namespace demo {
-
-using v8::Exception;
-using v8::FunctionCallbackInfo;
-using v8::Isolate;
-using v8::Local;
-using v8::Number;
-using v8::Object;
-using v8::String;
-using v8::Value;
-
-// This is the implementation of the "add" method
-// Input arguments are passed using the
-// const FunctionCallbackInfo<Value>& args struct
-void Add(const FunctionCallbackInfo<Value>& args) {
-  Isolate* isolate = args.GetIsolate();
-
-  // Check the number of arguments passed.
-  if (args.Length() < 2) {
-    // Throw an Error that is passed back to JavaScript
-    isolate->ThrowException(Exception::TypeError(
-        String::NewFromUtf8(isolate,
-                            "Wrong number of arguments").ToLocalChecked()));
-    return;
+NAN_METHOD(hello) {
+  int count = 0;
+  for (int i = 0; i < 1000000; i++) {
+    count = i;
   }
 
-  // Check the argument types
-  if (!args[0]->IsNumber() || !args[1]->IsNumber()) {
-    isolate->ThrowException(Exception::TypeError(
-        String::NewFromUtf8(isolate,
-                            "Wrong arguments").ToLocalChecked()));
-    return;
-  }
-
-  // Perform the operation
-  double value =
-      args[0].As<Number>()->Value() + args[1].As<Number>()->Value();
-  Local<Number> num = Number::New(isolate, value);
-
-  // Set the return value (using the passed in
-  // FunctionCallbackInfo<Value>&)
-  args.GetReturnValue().Set(num);
+  std::cout << "hello\n";
 }
 
-void Init(Local<Object> exports) {
-  NODE_SET_METHOD(exports, "add", Add);
+NAN_MODULE_INIT(init) {
+  Nan::SetMethod(target, "hello", hello);
 }
 
-NODE_MODULE(NODE_GYP_MODULE_NAME, Init)
-
-}  // namespace demo
+NODE_MODULE(hello, init);
