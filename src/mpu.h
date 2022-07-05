@@ -3,8 +3,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <wiringPi.h>
-#include <wiringPiI2C.h>
+// #include <wiringPi.h>
+// #include <wiringPiI2C.h>
 
 // Allows the user to configure the power mode and clock source. It also provides a bit for resetting the entire device
 // and a bit for disabling the temperature sensor
